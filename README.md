@@ -1,33 +1,30 @@
 # OAuth Scope Diff
 
-Detect OAuth scope creep in app manifest changes. In practice it is a narrow guardrail for deployment, cloud, CI, config, and operational safety checks: one command, a concrete report, and very little ceremony.
-
-## Project card
-
-<img src="assets/readme-cover.svg" alt="OAuth Scope Diff cover" width="100%" />
-
-| Detail | Value |
+| Field | Value |
 | --- | --- |
-| Area | delivery and infrastructure |
+| Area | delivery |
 | Command | `oauth-scope-diff` |
 | Example | `examples/sample.txt` |
 
-## What would make me stop a review
+![OAuth Scope Diff cover](assets/readme-cover.svg)
 
-| Stopper | Level | Why it matters |
-| --- | --- | --- |
-| `admin-scope` | high | administrative scope requested |
-| `write-scope` | medium | write scope requested |
-| `offline-access` | low | long-lived access requested |
+OAuth Scope Diff is meant for quick pull-request checks around OAuth scopes. It favors explicit rules over a bulky dashboard.
 
-## Run from a fresh clone
+## Signals
+
+- `admin-scope` - administrative scope requested (high); Require security review and explicit business justification..
+- `write-scope` - write scope requested (medium); Confirm least privilege and limit the token audience..
+- `offline-access` - long-lived access requested (low); Document refresh-token storage and rotation controls..
+
+## Finding map
+
+![Policy flow](assets/readme-diagram.svg)
+
+## One-pass run
 
 ```bash
 git clone https://github.com/mertefekurt/oauth-scope-diff.git
 cd oauth-scope-diff
-python -m venv .venv
-source .venv/bin/activate
 python -m pip install -e ".[dev]"
 oauth-scope-diff examples/sample.txt
-oauth-scope-diff examples/sample.txt --json
 ```
