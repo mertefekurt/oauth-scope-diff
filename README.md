@@ -1,47 +1,33 @@
-<img src="assets/readme-cover.svg" alt="OAuth Scope Diff cover" width="100%" />
-
 # OAuth Scope Diff
 
-Detect OAuth scope creep in app manifest changes.
+Detect OAuth scope creep in app manifest changes. In practice it is a narrow guardrail for deployment, cloud, CI, config, and operational safety checks: one command, a concrete report, and very little ceremony.
 
-![stack](https://img.shields.io/badge/stack-Python-be185d?style=flat-square) ![python](https://img.shields.io/badge/python-3.11-4b5563?style=flat-square) ![license](https://img.shields.io/badge/license-MIT-2563eb?style=flat-square) ![ci](https://img.shields.io/badge/ci-GitHub%20Actions-16a34a?style=flat-square)
+## Project card
 
-## Workflow
+<img src="assets/readme-cover.svg" alt="OAuth Scope Diff cover" width="100%" />
 
-1. Collect the review notes or exported records.
-2. Run `oauth-scope-diff` against the file.
-3. Read the findings in Markdown, or switch to JSON for automation.
-4. Fail CI only at the severity level you care about.
+| Detail | Value |
+| --- | --- |
+| Area | delivery and infrastructure |
+| Command | `oauth-scope-diff` |
+| Example | `examples/sample.txt` |
 
-## Checks
+## What would make me stop a review
 
-| Rule | Severity | What it catches |
+| Stopper | Level | Why it matters |
 | --- | --- | --- |
 | `admin-scope` | high | administrative scope requested |
 | `write-scope` | medium | write scope requested |
 | `offline-access` | low | long-lived access requested |
 
-## Command line
+## Run from a fresh clone
 
 ```bash
+git clone https://github.com/mertefekurt/oauth-scope-diff.git
+cd oauth-scope-diff
+python -m venv .venv
+source .venv/bin/activate
 python -m pip install -e ".[dev]"
 oauth-scope-diff examples/sample.txt
-oauth-scope-diff examples/sample.txt --json --fail-on medium
-```
-
-## Sample risky input
-
-```text
-added scope admin:write offline_access users:read billing:write
-```
-
-## Project shape
-
-```text
-.github/        CI workflow
-examples/       sample inputs
-src/            package source
-tests/          test coverage
-.gitignore      project file
-pyproject.toml  package metadata
+oauth-scope-diff examples/sample.txt --json
 ```
