@@ -1,16 +1,27 @@
-# oauth-scope-diff
+<img src="assets/readme-cover.svg" alt="OAuth Scope Diff cover" width="100%" />
 
-**Quick Pass.** Detect OAuth scope creep in app manifest changes.
+# OAuth Scope Diff
 
-## Use Case
+Detect OAuth scope creep in app manifest changes.
 
-OAuth apps often gain privileges gradually. This CLI gives reviewers a concrete list of risky scope changes before approval.
+![stack](https://img.shields.io/badge/stack-Python-be185d?style=flat-square) ![python](https://img.shields.io/badge/python-3.11-4b5563?style=flat-square) ![license](https://img.shields.io/badge/license-MIT-2563eb?style=flat-square) ![ci](https://img.shields.io/badge/ci-GitHub%20Actions-16a34a?style=flat-square)
 
-## Install
+## Workflow
 
-`oauth-scope-diff` accepts OAuth manifest diff or scope inventory in text, JSON, JSONL, or CSV form.
+1. Collect the review notes or exported records.
+2. Run `oauth-scope-diff` against the file.
+3. Read the findings in Markdown, or switch to JSON for automation.
+4. Fail CI only at the severity level you care about.
 
-## Command Shape
+## Checks
+
+| Rule | Severity | What it catches |
+| --- | --- | --- |
+| `admin-scope` | high | administrative scope requested |
+| `write-scope` | medium | write scope requested |
+| `offline-access` | low | long-lived access requested |
+
+## Command line
 
 ```bash
 python -m pip install -e ".[dev]"
@@ -18,30 +29,19 @@ oauth-scope-diff examples/sample.txt
 oauth-scope-diff examples/sample.txt --json --fail-on medium
 ```
 
-## Signals
-
-| Rule | Severity | Meaning |
-|---|---:|---|
-| `admin-scope` | high | administrative scope requested |
-| `write-scope` | medium | write scope requested |
-| `offline-access` | low | long-lived access requested |
-
-## Quality Gate
-
-```bash
-ruff check .
-pytest
-python -m oauth_scope_diff --help
-```
-
-License: MIT
-
-### Example Input
+## Sample risky input
 
 ```text
 added scope admin:write offline_access users:read billing:write
 ```
 
-### Architecture
+## Project shape
 
-`cli.py` reads files, `core.py` evaluates records, and `rules.py` keeps the oauth-scope-diff policy surface explicit.
+```text
+.github/        CI workflow
+examples/       sample inputs
+src/            package source
+tests/          test coverage
+.gitignore      project file
+pyproject.toml  package metadata
+```
